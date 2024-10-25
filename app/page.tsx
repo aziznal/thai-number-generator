@@ -127,11 +127,15 @@ export default function Home() {
   const [output, setOutput] = useState<string | undefined>();
 
   return (
-    <div className="w-[100dvw] h-[100dvh] flex flex-col justify-center items-center">
-      <div className="w-[500px]">
-        <h1 className="text-zinc-400 text-xl mb-4">
+    <div className="w-[100dvw] h-[100dvh] flex flex-col justify-center items-center container px-4">
+      <div className="w-full sm:w-[500px]">
+        <p className="text-white text-3xl font-bold text-center mb-4 uppercase font-mono">
+          Thai number transliterator
+        </p>
+
+        <p className="text-zinc-400 text-xl mb-4">
           Type your number (as 12345):
-        </h1>
+        </p>
 
         <input
           onChange={(e) => {
@@ -139,7 +143,7 @@ export default function Home() {
 
             setOutput(getThaiNumberTransliteration(+value));
           }}
-          className="mb-4 w-full border px-3 py-2 bg-transparent rounded border-b-emerald-700 border-t-teal-500 border-x-green-500"
+          className="mb-4 w-full border px-3 py-2 bg-transparent rounded border-b-emerald-700  border-t-teal-500 border-x-green-500"
           max="1000000"
           min="0"
           type="number"
