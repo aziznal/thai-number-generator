@@ -1,101 +1,155 @@
-import Image from "next/image";
+"use client";
+
+import { LucideGithub } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
+function getThaiNumberFromDigits(num: number) {
+  switch (num) {
+    case 1:
+      return "nıng";
+    case 2:
+      return "song";
+    case 3:
+      return "saam";
+    case 4:
+      return "sii";
+    case 5:
+      return "haa";
+    case 6:
+      return "hok";
+    case 7:
+      return "djet";
+    case 8:
+      return "bpaat";
+    case 9:
+      return "gaao";
+    case 10:
+      return "sip";
+    case 20: return "yii-sip";
+    case 30: return "saam-sip";
+    case 40: return "sii-sip";
+    case 50: return "haa-sip";
+    case 60: return "hok-sip";
+    case 70: return "djet-sip";
+    case 80: return "bpaat-sip";
+    case 90: return "gaao-sip";
+
+    // not for a hundred per-se, just the suffix
+    case 100:
+      return "roy";
+    case 1_000:
+      return "pahn";
+    case 10_000:
+      return "mıhn";
+    case 100_000:
+      return "sehn";
+    case 1_000_000:
+      return "lahrn";
+  }
+}
+
+function getDigits(num: number) {
+  const digits = [];
+
+  do {
+    digits.push(num % 10);
+    num = Math.floor(num / 10);
+  } while (num > 0);
+  return digits;
+}
+
+function getThaiNumberTransliteration(num?: number): string {
+  if (!num || num < 0 || num > 1_000_000)
+    return "Number can be between 0 and 1,000,000";
+
+  const [
+    firstDigit,
+    secondDigit,
+    thirdDigit,
+    fourthDigit,
+    fifthDigit,
+    sixthDigit,
+  ] = getDigits(num);
+
+  let transliteratedNumber = "";
+
+  // starting from the biggest available digit:
+
+  if (sixthDigit) {
+    transliteratedNumber += `${getThaiNumberFromDigits(sixthDigit)}-${getThaiNumberFromDigits(100_000)} `;
+  }
+
+  if (fifthDigit) {
+    transliteratedNumber += `${getThaiNumberFromDigits(fifthDigit)}-${getThaiNumberFromDigits(10_000)} `;
+  }
+
+  if (fourthDigit) {
+    transliteratedNumber += `${getThaiNumberFromDigits(fourthDigit)}-${getThaiNumberFromDigits(1_000)} `;
+  }
+
+  if (thirdDigit) {
+    transliteratedNumber += `${getThaiNumberFromDigits(thirdDigit)}-${getThaiNumberFromDigits(100)} `;
+  }
+
+  // one is a special case
+  if (secondDigit) {
+    transliteratedNumber += `${getThaiNumberFromDigits(+`${secondDigit}0`)} `;
+  }
+
+  const hasAnyOtherSignificantDigits = [
+    secondDigit,
+    thirdDigit,
+    fourthDigit,
+    fifthDigit,
+    sixthDigit,
+  ].some((digit) => !!digit);
+
+  if (hasAnyOtherSignificantDigits && firstDigit === 1)
+    transliteratedNumber += `eht`;
+  else transliteratedNumber += `${getThaiNumberFromDigits(firstDigit)}`;
+
+  return transliteratedNumber;
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [output, setOutput] = useState<string | undefined>();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  return (
+    <div className="w-[100dvw] h-[100dvh] flex flex-col justify-center items-center">
+      <div className="w-[500px]">
+        <h1 className="text-zinc-400 text-xl mb-4">
+          Type your number (as 12345):
+        </h1>
+
+        <input
+          onChange={(e) => {
+            const value = e.target.value;
+
+            setOutput(getThaiNumberTransliteration(+value));
+          }}
+          className="mb-4 w-full border px-3 py-2 bg-transparent rounded border-b-emerald-700 border-t-teal-500 border-x-green-500"
+          max="1000000"
+          min="0"
+          type="number"
+        />
+
+        <div className="text-xl text-emerald-500 font-bold text-center">
+          {output}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+      </div>
+
+      <div className="text-center w-full mt-16 flex gap-1 items-center justify-center">
+        <span>Made by</span>
+
+        <Link
+          href="https://github.com/aziznal/my-link-tree"
           target="_blank"
-          rel="noopener noreferrer"
+          className="flex gap-2 hover:text-rose-700 text-rose-500"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          aziznal <LucideGithub />
+        </Link>
+      </div>
     </div>
   );
 }
