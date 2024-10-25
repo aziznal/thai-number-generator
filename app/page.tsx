@@ -127,7 +127,7 @@ export default function Home() {
   const [output, setOutput] = useState<string | undefined>();
 
   return (
-    <div className="w-[100dvw] h-[100dvh] flex flex-col justify-center items-center container px-4">
+    <div className="w-[100dvw] h-[100dvh] flex flex-col justify-center items-center px-4">
       <div className="w-full sm:w-[500px]">
         <p className="text-white text-3xl font-bold text-center mb-4 uppercase font-mono">
           Thai number transliterator
