@@ -26,14 +26,22 @@ function getThaiNumberFromDigits(num: number) {
       return "gaao";
     case 10:
       return "sip";
-    case 20: return "yii-sip";
-    case 30: return "saam-sip";
-    case 40: return "sii-sip";
-    case 50: return "haa-sip";
-    case 60: return "hok-sip";
-    case 70: return "djet-sip";
-    case 80: return "bpaat-sip";
-    case 90: return "gaao-sip";
+    case 20:
+      return "yii-sip";
+    case 30:
+      return "saam-sip";
+    case 40:
+      return "sii-sip";
+    case 50:
+      return "haa-sip";
+    case 60:
+      return "hok-sip";
+    case 70:
+      return "djet-sip";
+    case 80:
+      return "bpaat-sip";
+    case 90:
+      return "gaao-sip";
 
     // not for a hundred per-se, just the suffix
     case 100:
@@ -46,6 +54,9 @@ function getThaiNumberFromDigits(num: number) {
       return "sehn";
     case 1_000_000:
       return "lahrn";
+
+    default:
+      return "";
   }
 }
 
